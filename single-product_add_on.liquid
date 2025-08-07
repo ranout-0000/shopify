@@ -1,0 +1,121 @@
+//render this file in the buy button as the {% render '--here enter the file name--' %}
+
+{%- if product.metafields.custom.product_add_on.value -%}
+
+  <style>
+    .product-addon label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    /* Custom Checkbox Styling */
+    .custom-checkbox {
+        width: 20px !important;
+        height: 20px;
+        appearance: none !important;
+        border: 1px solid #3f5a5d;
+        /* border-radius: 4px; */
+        cursor: pointer;
+        display: inline-block;
+        position: relative;
+    }
+
+    .product-addon label p {
+      -webkit-font-smoothing: antialiased;
+      -webkit-text-size-adjust: 100%;
+      font-family: Helvetica Neue,sans-serif;
+      font-size: calc(var(--typeBaseSize) - 1px);
+      letter-spacing: var(--typeBaseSpacing);
+      line-height: var(--typeBaseLineHeight);
+      text-rendering: optimizeSpeed;
+      font-weight: var(--typeBaseWeight) ! important;
+      color: var(--colorTextBody);
+    }
+
+    /* Checkbox Checked State */
+    .custom-checkbox:checked {
+        background-color: #3f5a5d;
+        border-color: #3f5a5d;
+    }
+
+    /* Adding a checkmark */
+    .custom-checkbox:checked::after {
+      content: "✔";
+      color: white;
+      font-size: 17px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: bold;
+    }
+  </style>
+
+  {%- assign addon_product = product.metafields.custom.product_add_on.value -%}
+
+  <div class="product-addon">
+    <label>
+      <input type="checkbox" id="addon-checkbox" class="custom-checkbox" data-variant-id="{{ addon_product.variants.first.id }}">
+      <p>{{ addon_product.title }} —  {{ addon_product.price | money }}</p>
+    </label>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var addToCartBtn = document.querySelector(".product-form__submit.button.button--full-width.button--secondary");
+
+      if (addToCartBtn) {
+        addToCartBtn.addEventListener("click", function(event) {
+          event.preventDefault(); // Prevent default behavior
+
+          var mainProductVariantId = document.querySelector('input[name="id"]').value;
+          var addonCheckbox = document.getElementById('addon-checkbox');
+          var addonVariantId = addonCheckbox && addonCheckbox.checked ? addonCheckbox.getAttribute('data-variant-id') : null;
+
+          var itemsToAdd = [{ id: mainProductVariantId, quantity: 1 }];
+
+          if (addonVariantId) {
+            itemsToAdd.push({ id: addonVariantId, quantity: 1 });
+          }
+
+          // ✅ Step 1: Add products to the cart
+          fetch('/cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ items: itemsToAdd })
+          })
+          .then(response => response.json())
+          .then(() => {
+            console.log('Products added to cart');
+            var cart = new theme.HeaderCart;
+            cart.init();chat
+            cart.open();
+            // ✅ Step 2: Store a flag in sessionStorage before reload
+            //sessionStorage.setItem("openCartAfterReload", "true");
+
+            // ✅ Step 3: Reload the page
+            // setTimeout(() => {
+            //   window.scrollTo(0, 0); // Force page to start at the top
+            //   location.reload();
+            // }, 500);
+          });
+        });
+      }
+
+      // ✅ Step 4: After reload, check if cart should open
+      // if (sessionStorage.getItem("openCartAfterReload") === "true") {
+      //   sessionStorage.removeItem("openCartAfterReload"); // Remove flag to prevent future triggers
+
+      //   setTimeout(() => {
+      //     if (typeof theme !== 'undefined' && theme.CartDrawer) {
+      //       theme.CartDrawer.prototype.open();
+      //     } else {
+      //       document.dispatchEvent(new CustomEvent('cart:open'));
+      //     }
+      //   }, 1000);
+      // }
+    });
+  </script>
+
+{%- endif -%}
+                     
