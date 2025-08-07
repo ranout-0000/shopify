@@ -1,0 +1,287 @@
+<style>
+  .product-addon.single {
+    display: none;
+}
+  .addon-on-checked {
+  display: none;
+}
+  .addon-div input[type="radio"]:checked ~ .addon-product .addon-on-unchecked {
+    display: none !important;
+}
+
+.addon-div input[type="radio"]:checked ~ .addon-product .addon-on-checked {
+    display: block !important;
+}
+label{
+   margin:0;
+}
+  
+</style>
+
+{%- liquid
+assign enable_dynamic_buttons = false
+if show_dynamic_checkout and template != 'product.preorder'
+assign enable_dynamic_buttons = true
+endif
+-%}
+
+{%- if enable_dynamic_buttons -%}
+<div class="payment-buttons">
+  {%- endif -%}
+
+  {% if product.metafields.custom.preorder == true %}
+  {%- liquid
+  assign default_text = 'products.product.preorder' | t
+  assign button_text = 'products.product.preorder' | t
+  unless current_variant.available
+  assign button_text = 'products.product.sold_out' | t
+  endunless
+  -%}
+  {% else %}
+  {%- liquid
+  assign default_text = 'products.product.add_to_cart' | t
+  assign button_text = 'products.product.add_to_cart' | t
+  unless current_variant.available
+  assign button_text = 'products.product.sold_out' | t
+  endunless
+  -%}
+  {% endif %}
+  
+  
+  
+  {% if section.settings.addons == true %}
+  <div class="winch-addon">
+    <h3>{{ section.settings.addon_products_title }}</h3>
+
+    {% if section.settings.addon_1 == true %}
+    <label class="addon-div" for="addon-1"  id="first-addon">
+      <input type="radio" name="addons" id="addon-1" value="checked" />
+      <div class="addon-product product-1">
+        <div class="addon-image">
+          <img src="{{ section.settings.addon_image_1 | img_url:'original' }}" />
+        </div>
+        <div class="addon-content">
+          <h4 id="addon_trigger_1">{{ section.settings.addon_title_1 }}</h4>
+          <p>{{ section.settings.addon_details_1 }}</p>
+          <div class="addon-prices">
+            <span class="sale-price-money">{{ section.settings.addon_sale_price_1 }}</span>
+            <span class="original-price-money">{{ section.settings.addon_original_price_1 }}</span>
+            <span class="saving-price">{{ section.settings.addon_saving_price_1 }}</span>
+          </div>
+        </div>
+        <div class="addon-checkbox addon-checkbox-1">
+          <div class="addon-on-unchecked">
+            <img src="https://ultrawinch.com.au/cdn/shop/t/17/assets/add.png" />
+          </div>
+          <div class="addon-on-checked">
+            <img src="https://ultrawinch.com.au/cdn/shop/t/17/assets/success-checked.png" />
+          </div>
+        </div>
+      </div>
+    </label>
+    <div id="addon_overlay_1" style="display:none;"></div>
+    <div id="addon_opener_1" style="display:none;">
+      <div id="addon_cross_1">x</div>
+                        <h5>{{ section.settings.addon_title_1 }}</h5>
+                      <div class=" addon_popup_content">
+        {{ section.settings.addon_detailed_1 }}
+      </div>
+      <div class="addon_popup_image">
+        <img src="{{ section.settings.addon_image_1 | img_url:'original' }}" />
+      </div>
+    </div>
+    {% endif %}
+    
+ {% if product.metafields.custom.addon_single_product.value != blank %}
+  {% assign addon_single_product = product.metafields.custom.addon_single_product.value %}
+
+  <!-- Select All Checkbox -->
+  <div class="product-addon product-addon-all" style="visibility: hidden;">
+    <label>
+      <input type="checkbox" id="select-all-addons1" class="custom-checkbox">
+      <strong>Select All Add-Ons</strong>
+    </label>
+  </div>
+    
+
+  <!-- Individual Addon Checkboxes -->
+   
+    <div class="product-addon single">
+      <label>
+        <input type="checkbox" class="custom-checkbox" id="addon-{{ addon_single_product.id }}"
+          data-variant-id="{{ addon_single_product.variants.first.id }}"
+          data-product-title="{{ addon_single_product }}"
+          data-product-price="{{ addon_single_product.variants.first.price | money }}">
+        <span>Add {{ addon_single_product.title }} for {{ addon_single_product.variants.first.price | money }}</span>
+      </label>
+    </div>
+  
+{% endif %}
+    
+
+   
+    {% if section.settings.addon_2 == true %}
+    <label class="addon-div" for="addon-2" id="second-addon">
+      <input type="radio" name="addons" id="addon-2" value="checked" />
+      <div class="addon-product product-1">
+        <div class="addon-image">
+          <img src="{{ section.settings.addon_image_2 | img_url:'original' }}" />
+        </div>
+        <div class="addon-content">
+          <h4 id="addon_trigger_2">{{ section.settings.addon_title_2 }}</h4>
+          <p>{{ section.settings.addon_details_2 }}</p>
+          <div class="addon-prices">
+            <span class="sale-price-money">{{ section.settings.addon_sale_price_2 }}</span>
+            <span class="original-price-money">{{ section.settings.addon_original_price_2 }}</span>
+            <span class="saving-price">{{ section.settings.addon_saving_price_2 }}</span>
+          </div>
+        </div>
+        <div class="addon-checkbox addon-checkbox-1">
+          <div class="addon-on-unchecked">
+            <img src="https://ultrawinch.com.au/cdn/shop/t/17/assets/add.png" />
+          </div>
+          <div class="addon-on-checked">
+            <img src="https://ultrawinch.com.au/cdn/shop/t/17/assets/success-checked.png" />
+          </div>
+        </div>
+      </div>
+    </label>
+    <div id="addon_overlay_2" style="display:none;"></div>
+    <div id="addon_opener_2" style="display:none;">
+      <div id="addon_cross_2">x</div>
+                        <h5>{{ section.settings.addon_title_2 }}</h5>
+                      <div class=" addon_popup_content">
+        {{ section.settings.addon_detailed_2 }}
+      </div>
+      <div class="addon_popup_image">
+        <img src="{{ section.settings.addon_image_2 | img_url:'original' }}" />
+      </div>
+    </div>
+    {% endif %}
+  
+
+  {% if product.metafields.custom.addon_products.value != blank %}
+  {% assign addon_products = product.metafields.custom.addon_products.value %}
+
+  <!-- Select All Checkbox -->
+  <div class="product-addon product-addon-all" style="visibility: hidden;">
+    <label>
+      <input type="checkbox" id="select-all-addons" class="custom-checkbox">
+      <strong>Select All Add-Ons</strong>
+    </label>
+  </div>
+    
+
+  <!-- Individual Addon Checkboxes -->
+   {% for addon_product in addon_products %}
+    <div class="product-addon single">
+      <label>
+        <input type="checkbox" class="custom-checkbox" id="addon-{{ addon_product.id }}"
+          data-variant-id="{{ addon_product.variants.first.id }}"
+          data-product-title="{{ addon_product.title }}"
+          data-product-price="{{ addon_product.variants.first.price | money }}">
+        <span>Add {{ addon_product.title }} for {{ addon_product.variants.first.price | money }}</span>
+      </label>
+    </div>
+  {% endfor %} 
+{% endif %}
+
+
+
+
+  </div>
+    {% endif %}
+
+    
+
+<!-- Add to Cart logic -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const firstAddonRadio = document.getElementById('addon-1');
+    const secondAddonRadio = document.getElementById('addon-2');
+    const addonCheckboxes = document.querySelectorAll("input.custom-checkbox[id^='addon-']");
+    const addToCartButton = document.querySelector('[data-add-to-cart]');
+
+    let selectedAddonProducts = [];
+
+    // Categorize checkboxes
+    const addonCheckboxList = Array.from(addonCheckboxes);
+    const singleAddonCheckbox = addonCheckboxList.find(cb => cb.closest('.product-addon-all')?.id === "select-all-addons1" || cb.id.includes('{{ addon_single_product.id }}'));
+    const multipleAddonCheckboxes = addonCheckboxList.filter(cb => cb !== singleAddonCheckbox);
+
+    function updateSelectedProducts() {
+      selectedAddonProducts = addonCheckboxList
+        .filter(cb => cb.checked)
+        .map(cb => cb.getAttribute("data-variant-id"));
+    }
+
+    // Radio #1 → Select ONLY the single addon
+    if (firstAddonRadio) {
+      firstAddonRadio.addEventListener('change', () => {
+        if (firstAddonRadio.checked) {
+          addonCheckboxList.forEach(cb => cb.checked = false);
+          if (singleAddonCheckbox) singleAddonCheckbox.checked = true;
+          updateSelectedProducts();
+        }
+      });
+    }
+
+    // Radio #2 → Select ONLY multiple addon checkboxes (not the single one)
+    if (secondAddonRadio) {
+      secondAddonRadio.addEventListener('change', () => {
+        if (secondAddonRadio.checked) {
+          addonCheckboxList.forEach(cb => cb.checked = false);
+          multipleAddonCheckboxes.forEach(cb => cb.checked = true);
+          updateSelectedProducts();
+        }
+      });
+    }
+
+    // Manual checkbox interaction
+    addonCheckboxList.forEach(cb => {
+      cb.addEventListener('change', () => {
+        updateSelectedProducts();
+      });
+    });
+
+    // Add to cart handler
+    if (addToCartButton) {
+      addToCartButton.addEventListener("click", function (event) {
+        event.preventDefault();
+
+        const mainForm = this.closest('form');
+        const mainVariantId = mainForm?.querySelector('[name="id"]')?.value;
+
+        if (!mainVariantId) {
+          console.warn("Main variant ID not found.");
+          return;
+        }
+
+        const cartItems = [{ id: mainVariantId, quantity: 1 }];
+
+        selectedAddonProducts.forEach(variantId => {
+          cartItems.push({ id: variantId, quantity: 1 });
+        });
+
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ items: cartItems })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (window.theme?.CartDrawer) {
+            const cart = new theme.CartDrawer();
+            cart.init();
+            cart.open();
+          }
+        })
+        .catch(error => {
+          console.error('Error adding to cart:', error);
+        });
+      });
+    }
+  });
+</script>
+
+
